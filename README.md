@@ -2,7 +2,7 @@
 
 Convene is a multi-agent debate engine powered by structured LLM agents. Using a LangGraph orchestrator, it runs real-time consensus debates across domain-specific presets (Developer, Education, Startup) with cross-examination, tool usage, consensus evaluation, and real-time SSE streaming.
 
-## 🔗 Live Deployments & Repositories
+## Live Deployments & Repositories
 
 * **Live Website (Frontend)**: [convene-six.vercel.app](https://convene-six.vercel.app)
 * **Live API Server (Backend)**: [convene-backend-0fwn.onrender.com](https://convene-backend-0fwn.onrender.com)
@@ -11,7 +11,7 @@ Convene is a multi-agent debate engine powered by structured LLM agents. Using a
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
 * **Multi-Agent Consensus Graphs**: Runs structured debates using domain-specific personas (e.g., Architect, Security, Performance) who challenge each other to reach a final scored consensus.
 * **Google OAuth Sign-In**: Integrated with Supabase Auth to support Google Sign-In and local accounts.
@@ -21,7 +21,7 @@ Convene is a multi-agent debate engine powered by structured LLM agents. Using a
 
 ---
 
-## 🛠️ Architecture & Tech Stack
+## Architecture & Tech Stack
 
 ```
 POST /debate  →  LangGraph Orchestrator  →  4 Domain Personas (LLM Agents)
@@ -37,9 +37,9 @@ POST /debate  →  LangGraph Orchestrator  →  4 Domain Personas (LLM Agents)
 
 ---
 
-## ⚙️ Quick Start
+## Quick Start
 
-### 🐍 Backend Setup
+### Backend Setup
 
 1. **Install dependencies**:
    ```bash
@@ -59,7 +59,7 @@ POST /debate  →  LangGraph Orchestrator  →  4 Domain Personas (LLM Agents)
    uvicorn app.main:app --port 8000 --reload
    ```
 
-### ⚡ Frontend Setup
+### Frontend Setup
 
 1. **Install dependencies**:
    ```bash
@@ -73,14 +73,14 @@ POST /debate  →  LangGraph Orchestrator  →  4 Domain Personas (LLM Agents)
    NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_myU9f34KZ5iNyLiKet5-cQ_y0xc0_PC
    NEXT_PUBLIC_API_URL=http://localhost:8000
    ```
-2. **Run the development server**:
+3. **Run the development server**:
    ```bash
    npm run dev
    ```
 
 ---
 
-## 🧪 Testing
+## Testing
 
 Run backend tests using pytest:
 ```bash
