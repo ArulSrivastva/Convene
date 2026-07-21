@@ -1,94 +1,90 @@
-# Convene Backend
+# Convene - Multi-Agent Debate Platform
 
-Multi-agent debate engine with agentic AI. FastAPI backend that runs structured debates across domain presets using LangGraph, with real-time SSE streaming, hand-rolled auth, and Postgres persistence.
+Convene is a multi-agent debate engine powered by structured LLM agents. Using a LangGraph orchestrator, it runs real-time consensus debates across domain-specific presets (Developer, Education, Startup) with cross-examination, tool usage, consensus evaluation, and real-time SSE streaming.
 
-## Quick Start
+## 🔗 Live Deployments & Repositories
 
-```bash
-# Install
-pip install -e ".[test]"
+* **Live Website (Frontend)**: [convene-six.vercel.app](https://convene-six.vercel.app)
+* **Live API Server (Backend)**: [convene-backend-0fwn.onrender.com](https://convene-backend-0fwn.onrender.com)
+* **Frontend Repository**: [github.com/ArulSrivastva/Convene](https://github.com/ArulSrivastva/Convene)
+* **Backend Repository**: [github.com/uniquedev200/Convene-Backend](https://github.com/uniquedev200/Convene-Backend)
 
-# Set up environment
-cp .env.example .env
-# Fill in GROQ_API_KEY, JWT_SECRET, SUPABASE_DB_URL
+---
 
-# Create database tables
-python -c "import asyncpg, asyncio; exec(open('db/schema.sql').read())"  # or run schema.sql directly
+## 🚀 Key Features
 
-# Run
-uvicorn app.main:app --host 127.0.0.1 --port 8000
+* **Multi-Agent Consensus Graphs**: Runs structured debates using domain-specific personas (e.g., Architect, Security, Performance) who challenge each other to reach a final scored consensus.
+* **Google OAuth Sign-In**: Integrated with Supabase Auth to support Google Sign-In and local accounts.
+* **Database-Less Fallback**: Auto-detects database configuration status—falls back to memory-only execution when database pools are offline or missing credentials.
+* **Responsive Mobile Layout**: Optimized with a responsive sliding sidebar drawer, overlay backdrop, and hamburger menu toggle for mobile devices.
+* **Real-time Streaming**: Connects directly to FastAPI's Server-Sent Events (SSE) stream to display live debate thoughts, agent challenges, and tools in action.
+
+---
+
+## 🛠️ Architecture & Tech Stack
+
 ```
-
-API available at `http://127.0.0.1:8000`.
-
-## Architecture
-
-```
-POST /debate  →  LangGraph orchestrator  →  4 domain personas (LLM agents)
+POST /debate  →  LangGraph Orchestrator  →  4 Domain Personas (LLM Agents)
                    ↕                              ↕
-              tool calls (web_search,          cross-examination
-              url_fetch, github, docs)         (agent challenges)
+              Tool Calls (Web Search,          Cross-Examination
+              URL Fetch, GitHub, Docs)         (Agent Challenges)
                    ↕                              ↕
-              scoring + weighting  →  consensus finalization  →  SSE stream
+              Scoring + Weighting  →  Consensus Finalization  →  SSE Stream
 ```
 
-**Presets:** `developer`, `education`, `startup` — each with unique personas, tools, and scoring weights. Domain-agnostic graph structure.
+* **Backend**: FastAPI, LangGraph, Python 3.11+, PostgreSQL (Supabase).
+* **Frontend**: Next.js 15, TailwindCSS, TypeScript, Lucide Icons, Supabase Auth.
 
-## Auth
+---
 
-Hand-rolled email+password flow (no Supabase Auth). bcrypt hashing, 6-digit verification codes via Resend, HS256 JWTs.
+## ⚙️ Quick Start
 
-| Endpoint | Method | Description |
-|---|---|---|
-| `/auth/signup` | POST | Register with email+password, sends verification code |
-| `/auth/verify` | POST | Verify code, get JWT |
-| `/auth/login` | POST | Login with email+password, get JWT |
+### 🐍 Backend Setup
 
-Anonymous debates work without auth. Authenticated debates are stored per-user.
+1. **Install dependencies**:
+   ```bash
+   pip install -e ".[test]"
+   ```
+2. **Configure environment**:
+   Create a `.env` file in the root directory:
+   ```env
+   GROQ_API_KEY=your_groq_api_key
+   JWT_SECRET=your_jwt_signing_secret
+   SUPABASE_URL=https://zxnfcbojuxbdqzryqtaw.supabase.co
+   SUPABASE_ANON_KEY=sb_publishable_myU9f34KZ5iNyLiKet5-cQ_y0xc0_PC
+   SUPABASE_DB_URL=optional_postgres_connection_string
+   ```
+3. **Run the server**:
+   ```bash
+   uvicorn app.main:app --port 8000 --reload
+   ```
 
-## API
+### ⚡ Frontend Setup
 
-| Endpoint | Method | Auth | Description |
-|---|---|---|---|
-| `/health` | GET | No | Health check |
-| `/presets` | GET | No | List all debate presets |
-| `/tools` | GET | No | List available tools by preset |
-| `/debate` | POST | Yes | Create and start a debate |
-| `/debate/{id}/stream` | GET | No | SSE stream of live debate events |
-| `/debate/{id}/result` | GET | No | Final debate result |
-| `/debates/mine` | GET | Yes | List authenticated user's debates |
+1. **Install dependencies**:
+   ```bash
+   cd frontend
+   npm install
+   ```
+2. **Configure environment**:
+   Create a `frontend/.env.local` file:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=https://zxnfcbojuxbdqzryqtaw.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_myU9f34KZ5iNyLiKet5-cQ_y0xc0_PC
+   NEXT_PUBLIC_API_URL=http://localhost:8000
+   ```
+2. **Run the development server**:
+   ```bash
+   npm run dev
+   ```
 
-**SSE events:** `agent_stance`, `tool_call`, `cross_exam`, `consensus_final`, `error`
+---
 
-## Database
+## 🧪 Testing
 
-Postgres via asyncpg. Schema in `db/schema.sql`.
-
-- `users` — email, password_hash, verified
-- `verification_codes` — email, code, expires_at
-- `debates` — id, user_id, preset_id, question, options, status, result
-
-## Testing
-
+Run backend tests using pytest:
 ```bash
-pytest -q                    # 61 tests
+pytest -q                    # Run all test suites
 pytest tests/test_api.py     # API integration tests
-pytest tests/test_graph.py   # Graph orchestration tests
-```
-
-## Environment Variables
-
-See `.env.example` for the full list. Required:
-
-| Variable | Description |
-|---|---|
-| `GROQ_API_KEY` | Groq API key for LLM inference |
-| `JWT_SECRET` | Secret for signing JWTs (generate with `python -c "import secrets; print(secrets.token_urlsafe(32))"`) |
-| `SUPABASE_DB_URL` | Postgres connection string (e.g. `postgresql://...@...pooler.supabase.com:5432/postgres`) |
-
-## Deploy
-
-```bash
-docker build -t convene-backend .
-docker run -p 8000:8000 --env-file .env convene-backend
+pytest tests/test_graph.py   # LangGraph orchestrator tests
 ```
