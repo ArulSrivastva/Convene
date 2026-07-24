@@ -6,8 +6,7 @@ Convene is a multi-agent debate engine powered by structured LLM agents. Using a
 
 * **Live Website (Frontend)**: [convene-six.vercel.app](https://convene-six.vercel.app)
 * **Live API Server (Backend)**: [convene-backend-0fwn.onrender.com](https://convene-backend-0fwn.onrender.com)
-* **Frontend Repository**: [github.com/ArulSrivastva/Convene](https://github.com/ArulSrivastva/Convene)
-* **Backend Repository**: [github.com/uniquedev200/Convene-Backend](https://github.com/uniquedev200/Convene-Backend)
+* **GitHub Repository**: [github.com/ArulSrivastva/Convene](https://github.com/ArulSrivastva/Convene)
 
 ---
 
